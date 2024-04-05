@@ -1,10 +1,12 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase.init/firebase.init";
 import { useState } from "react";
+import { FaRegEye ,FaRegEyeSlash } from "react-icons/fa6";
 
 const HeroRegister = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleHeroRegister = (e) => {
     e.preventDefault();
@@ -17,6 +19,11 @@ const HeroRegister = () => {
 
     if (password.length < 6) {
       setErrorMsg('Password should be at least 6 characters');
+      return
+    }
+    // /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/(password validation regex js)
+    else if(!/[!@#$%^&*]/.test(password)) {
+      setErrorMsg('Password should be at least 1 spacial character')
       return
     }
 
@@ -57,11 +64,17 @@ const HeroRegister = () => {
               />
             </div>
             <div className="form-control">
-              <label className="label">
+              <label className="label relative">
                 <span className="label-text">Password</span>
+              <span onClick={() => setShowPassword(!showPassword)} className="absolute -bottom-9 right-3">
+                {
+                  showPassword ? <FaRegEye></FaRegEye> : <FaRegEyeSlash></FaRegEyeSlash>
+                }
+              </span>
+
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="password"
                 name="password"
                 className="input input-bordered"
