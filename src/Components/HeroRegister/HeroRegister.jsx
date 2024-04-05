@@ -1,25 +1,38 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase.init/firebase.init";
-
+import { useState } from "react";
 
 const HeroRegister = () => {
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("")
 
-    const handleHeroRegister = e => {
-        e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        // console.log(email,password);
-        createUserWithEmailAndPassword(auth,email,password)
-          .then(result => {
-            console.log(result.user);
-          })
-          .catch(error => {
-            console.error(error);
-          })
+  const handleHeroRegister = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    // console.log(email,password);
+
+    setErrorMsg('')
+    setSuccessMsg('')
+
+    if (password.length < 6) {
+      setErrorMsg('Password should be at least 6 characters');
+      return
     }
 
-    return (
-        <div className="hero min-h-screen bg-base-200">
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        console.log(result.user);
+        setSuccessMsg("User Successfully Added")
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorMsg(error.message);
+      });
+  };
+
+  return (
+    <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Login now!</h1>
@@ -64,10 +77,18 @@ const HeroRegister = () => {
               <button className="btn btn-primary">Login</button>
             </div>
           </form>
+          <div>
+            {
+              errorMsg && <p className="text-red-600 text-center">{errorMsg}</p>
+            }
+            {
+              successMsg && <p className="text-green-600 text-center">{successMsg}</p>
+            }
+          </div>
         </div>
       </div>
     </div>
-    );
+  );
 };
 
 export default HeroRegister;
