@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase.init/firebase.init";
 import { useState } from "react";
 import { FaRegEye ,FaRegEyeSlash } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const HeroRegister = () => {
   const [errorMsg, setErrorMsg] = useState("");
@@ -23,7 +24,7 @@ const HeroRegister = () => {
       return;
     }
     // /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/(password validation regex js)
-    else if(!/[!@#$%^&*]/.test(password)) {
+    else if(!/[A-Z]/.test(password)) {
       setErrorMsg('Password should be at least 1 spacial character');
       return;
     }
@@ -98,6 +99,9 @@ const HeroRegister = () => {
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
             </div>
+            <div className="text-center">
+            <p>Already have an account? Please <Link to={'/login'} className="text-blue-600">login.</Link></p>
+          </div>
           </form>
           <div>
             {
@@ -107,6 +111,7 @@ const HeroRegister = () => {
               successMsg && <p className="text-green-600 text-center">{successMsg}</p>
             }
           </div>
+          
         </div>
       </div>
     </div>
