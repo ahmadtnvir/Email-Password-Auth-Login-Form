@@ -12,6 +12,7 @@ const HeroRegister = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    const accept = e.target.terms.checked;
     // console.log(email,password);
 
     setErrorMsg('')
@@ -19,12 +20,16 @@ const HeroRegister = () => {
 
     if (password.length < 6) {
       setErrorMsg('Password should be at least 6 characters');
-      return
+      return;
     }
     // /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/(password validation regex js)
     else if(!/[!@#$%^&*]/.test(password)) {
-      setErrorMsg('Password should be at least 1 spacial character')
-      return
+      setErrorMsg('Password should be at least 1 spacial character');
+      return;
+    }
+    else if (!accept) {
+      setErrorMsg('Please accept out terms and conditions!');
+      return;
     }
 
     createUserWithEmailAndPassword(auth, email, password)
@@ -68,7 +73,7 @@ const HeroRegister = () => {
                 <span className="label-text">Password</span>
               <span onClick={() => setShowPassword(!showPassword)} className="absolute -bottom-9 right-3">
                 {
-                  showPassword ? <FaRegEye></FaRegEye> : <FaRegEyeSlash></FaRegEyeSlash>
+                  showPassword ? <FaRegEyeSlash></FaRegEyeSlash> : <FaRegEye></FaRegEye>
                 }
               </span>
 
@@ -85,6 +90,10 @@ const HeroRegister = () => {
                   Forgot password?
                 </a>
               </label>
+            </div>
+            <div>
+              <input type="checkbox" name="terms" id="terms" />
+              <label className="ml-2" htmlFor="terms">Accept our <a href="#">terms and conditions.</a></label>
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
