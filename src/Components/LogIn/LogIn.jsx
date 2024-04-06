@@ -24,7 +24,7 @@ const LogIn = () => {
       setErrorMsg('Password should be at least 6 characters');
       return;
     }
-    else if (!/[!@#$%^&*]/.test(password)) {
+    else if (!/[A-Z]/.test(password)) {
       setErrorMsg('Password should be at least 1 spacial character');
       return;
     }
@@ -32,7 +32,12 @@ const LogIn = () => {
     signInWithEmailAndPassword(auth,email,password)
       .then(result => {
         console.log(result.user);
-        setSuccessMsg('Successfully Added');
+        if(result.user.emailVerified){
+            setSuccessMsg('Successfully Added');
+        }
+        else{
+          alert('Please verify your account.')
+        }
       })
       .catch(error => {
         console.error(error);
@@ -46,7 +51,7 @@ const LogIn = () => {
       console.log('Please provide an email', emailRef.current.value);
       return;
     }
-    else if (!/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/.test(email)) {
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       console.log('Please write a valid email');
       return;
     }

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import auth from "../../firebase.init/firebase.init";
 import { useState } from "react";
 import { FaRegEye ,FaRegEyeSlash } from "react-icons/fa6";
@@ -11,6 +11,7 @@ const HeroRegister = () => {
 
   const handleHeroRegister = (e) => {
     e.preventDefault();
+    const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
     const accept = e.target.terms.checked;
@@ -37,6 +38,23 @@ const HeroRegister = () => {
       .then((result) => {
         console.log(result.user);
         setSuccessMsg("User Successfully Added")
+
+        //update profile
+        updateProfile(result.user,{
+          displayName: name, photoURL: "https://example.com/jane-q-user/profile.jpg"
+        })
+          .then(()=> {
+            console.log('profile updated');
+          })
+          .catch(error => {
+            console.error(error);
+          })
+
+        //send verification email:
+        sendEmailVerification(result.user)
+          .then(()=> {
+            alert('Please check your email and verify your account.')
+          })
       })
       .catch((error) => {
         console.error(error);
@@ -57,6 +75,18 @@ const HeroRegister = () => {
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form onSubmit={handleHeroRegister} className="card-body">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Name"
+                name="name"
+                className="input input-bordered"
+                required
+              />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
